@@ -66,6 +66,7 @@ body, button{
     border-radius: 15px;
     border-color: #b8b8aa;
 }
+
 .columns {
     overflow-y: auto;
     display: flex;
@@ -93,8 +94,25 @@ body, button{
     text-align: center;
     font-size: 24px;
     cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
 }
 .pole:disabled{
     color: black;
     cursor: default;
+}
+.J_tirle,.fio{
+    display: flex;
+    align-items: center;
+}
+.button_removeFIO,.button_remove{
+    right: 0;
+    border: none;
+    color: #A60000;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.button_remove{
+    top: 0;
+    color:#b8b8aa;
 }

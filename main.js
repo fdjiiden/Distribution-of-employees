@@ -26,20 +26,25 @@ function newcolumns() {
         }
         else {
             div.innerHTML = `
+            <div class='J_tirle'>
             <input class="pole" data-card="${i}" placeholder="Должность" maxlength="25" value="${titles[i] || ''}"></input>
-            
+            <button  class="button_remove" data-card="${i}">X</button>
+            </div>
             `
         }
-        for(var j = 0; j < countFIO; j++){
         if (!human[i]) human[i] = []; 
+        for(var j = 0; j < human[i].length; j++){
         if(file === 'index.html'){div.innerHTML += `
             <input disabled class="pole" data-card="${i}" data-row="${j}" placeholder="ФИО" maxlength="25" value="${human[i][j] || ''}"></input>
         `}
         else{div.innerHTML += `
-            <input class="pole" data-card="${i}" data-row="${j}" placeholder="ФИО" maxlength="25" value="${human[i][j] || ''}"></input>
+            <div class="fio">
+            <input class="pole pole_FIO" data-card="${i}" data-row="${j}" placeholder="ФИО" maxlength="25" value="${human[i][j] || ''}"></input>
+            <button  class="button_removeFIO" data-card="${i}" data-row="${j}">X</button>
+            </div>
         `}
         }
-        if(file != 'index.html')div.innerHTML += `<button class='button_FIO' id='CountFIO'>Добавить человека</button>`
+        if(file != 'index.html')div.innerHTML += `<button type="button" class='button_FIO' data-card="${i}">Добавить человека</button>`
         body.append(div);
     }
     document.querySelectorAll('.pole[placeholder="Должность"]').forEach(input => {
@@ -62,6 +67,9 @@ function newcolumns() {
 });
 }
 
+function Exactly(){
+    return confirm("Вы точно хотите удалить?");
+}
 if (buttonPlusOne) {
     buttonPlusOne.addEventListener('click', function() {
         n++; 
@@ -69,19 +77,36 @@ if (buttonPlusOne) {
         newcolumns(); 
     });
 }
-if (body) {// тут под кнопку удаления всё сделанно id = 'button_removeFIO'
+if (body) {
     body.addEventListener('click', function(event) {
-        if (event.target.classList.contains('button_removeFIO')) {
-            if (countFIO > 0) {
-                countFIO--;
-                localStorage.setItem('SaveCountFIO', countFIO);
-                for (var i = 0; i < n; i++) {
-                    if (human[i] && human[i].length > countFIO) {
-                        human[i].splice(countFIO, 1);
-                    }
+        if (event.target.classList.contains('button_FIO')) {//добавление
+            const cardIndex = event.target.getAttribute('data-card');
+            if (!human[cardIndex]) human[cardIndex] = [];
+            human[cardIndex].push(''); 
+            localStorage.setItem('SaveHumans', JSON.stringify(human));
+            newcolumns(); 
+        }
+        if (event.target.classList.contains('button_removeFIO')) {//удаление
+            if(Exactly()){
+                const cardIndex = event.target.getAttribute('data-card');
+                const rowIndex = event.target.getAttribute('data-row');
+                
+                if (human[cardIndex]) {
+                    human[cardIndex].splice(rowIndex, 1); 
                 }
+                localStorage.setItem('SaveHumans', JSON.stringify(human)); 
+                newcolumns(); }
+        }
+        if (event.target.classList.contains('button_remove')) {
+            if (Exactly()) {
+                const cardIndex = parseInt(event.target.getAttribute('data-card'));
+                titles.splice(cardIndex, 1);
+                human.splice(cardIndex, 1);
+                n--;
+                localStorage.setItem('SaveTitles', JSON.stringify(titles));
                 localStorage.setItem('SaveHumans', JSON.stringify(human));
-                newcolumns(); 
+                localStorage.setItem('SaveCount', n);
+                newcolumns();
             }
         }
     });
