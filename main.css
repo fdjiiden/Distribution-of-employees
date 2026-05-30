@@ -38,24 +38,34 @@ body, button{
     align-items: center;
     }
 .button1, .button2, .button3{
+    color: black;
     background-color: #b8b8aa;
     border: none;
     border-radius: 15px;
     margin: 80px;
     padding: 20px;
     text-align: center;
-    position: absolute; 
     min-width: 300px;
     text-decoration: none;
+    cursor: pointer;
 }
 .button1{
-    left: 10px;
+    right: 10px;
 }
 .button3{
     right: 10px;
 }
 .button1:visited, .button2:visited, .button3:visited{
     color: black;
+}
+.Back_button{
+    margin-right: auto;
+    margin-left: 20px;
+    height: 70px;
+    transition: filter 0.3s ease;
+}
+.Back_button:hover img {
+    filter: invert(1);
 }
 .button_FIO{
     cursor: pointer;
@@ -77,13 +87,20 @@ body, button{
     box-sizing: border-box; 
     height: 800px;
 }
-.info{
+.info, #Count{
     flex-shrink: 0;
     margin: 10px;
     margin-top: 40px;
     height: 700px;
     width: 350px;
     border: black solid 2px;
+}
+#Count{
+    background-color: #b8b8aa;
+    transition: background-color 0.2s ease;
+}
+#Count:hover{
+    background-color: #586f6b;
 }
 .pole{
     height: 70px;

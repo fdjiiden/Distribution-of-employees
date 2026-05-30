@@ -47,6 +47,11 @@ function newcolumns() {
         if(file != 'index.html')div.innerHTML += `<button type="button" class='button_FIO' data-card="${i}">Добавить человека</button>`
         body.append(div);
     }
+    if(window.location.pathname.split('/').pop() == 'position.html'){
+        const AppendBut1 = document.createElement('button');
+        AppendBut1.id = 'Count'; AppendBut1.textContent = 'Добавить новую';
+        body.append(AppendBut1);
+    }
     document.querySelectorAll('.pole[placeholder="Должность"]').forEach(input => {
     input.addEventListener('input', function() {
         const cardIndex = this.getAttribute('data-card'); 
@@ -70,13 +75,7 @@ function newcolumns() {
 function Exactly(){
     return confirm("Вы точно хотите удалить?");
 }
-if (buttonPlusOne) {
-    buttonPlusOne.addEventListener('click', function() {
-        n++; 
-        localStorage.setItem('SaveCount', n);
-        newcolumns(); 
-    });
-}
+
 if (body) {
     body.addEventListener('click', function(event) {
         if (event.target.classList.contains('button_FIO')) {//добавление
@@ -97,6 +96,12 @@ if (body) {
                 localStorage.setItem('SaveHumans', JSON.stringify(human)); 
                 newcolumns(); }
         }
+        if (event.target.id === 'Count') {
+            n++; 
+            localStorage.setItem('SaveCount', n);
+            newcolumns();
+            return; // Выходим из функции, так как перерисовка уже запущена
+        }
         if (event.target.classList.contains('button_remove')) {
             if (Exactly()) {
                 const cardIndex = parseInt(event.target.getAttribute('data-card'));
@@ -115,3 +120,4 @@ if (body) {
 console.log(n);
 console.log(countFIO);
 newcolumns()
+// ------------------Страничка employee.thml------------------
