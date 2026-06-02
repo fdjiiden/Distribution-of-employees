@@ -1,3 +1,5 @@
+const file = window.location.pathname.split('/').pop();
+if(file == 'index.html' || file == 'position.html'){
 const element = {
     item:document.querySelector('.pole'),
 };
@@ -18,7 +20,6 @@ function newcolumns() {
     for (var i = 0; i < n; i++) {
         const div = document.createElement('div');
         div.classList.add('info');
-        const file = window.location.pathname.split('/').pop();
         if(file === 'index.html'){
             div.innerHTML = `
             <input disabled class="pole" data-card="${i}" placeholder="Должность" maxlength="25" value="${titles[i] || ''}"></input>
@@ -120,4 +121,25 @@ if (body) {
 console.log(n);
 console.log(countFIO);
 newcolumns()
+}
 // ------------------Страничка employee.thml------------------
+if(file == 'employee.html'){
+
+const emp={item:document.querySelector('.employee')};
+var Em_n = 8;
+function employee_spawn(){
+    const container = emp.item;
+    if(!container) return;
+    container.innerHTML = '';
+    for(var i = 0; i < Em_n;i++){
+        const Em_div = document.createElement('div');
+        Em_div.classList.add('humans');
+        Em_div.innerHTML =`
+        <input class='pole' data-card="${i}" placeholder="-----" maxlength="45"> </input>
+        `;
+        container.append(Em_div);
+    }
+    container.insertAdjacentHTML('beforeend', `<button type="button" class="button_EM" data-card="0">Добавить сотрудника</button>`);
+}
+employee_spawn();
+}
