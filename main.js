@@ -135,11 +135,61 @@ function employee_spawn(){
         const Em_div = document.createElement('div');
         Em_div.classList.add('humans');
         Em_div.innerHTML =`
-        <input class='pole' data-card="${i}" placeholder="-----" maxlength="45"> </input>
+        <input class='pole' data-card="${i}" placeholder="ФИО" maxlength="45" style="width: 100%; text-align: center; box-sizing: border-box; margin-bottom: 10px;"> </input>
+        <select style="width: 100%; text-align: center; box-sizing: border-box; margin-bottom: 10px;">
+            <option disabled selected>Пол</option>
+            <option>Мужской</option>
+            <option>Женский</option>
+        </select>
+        <div class="humansStatIn">
+            <label>Возраст:</label>
+            <input class='pole' data-card="${i}" placeholder="____________________" maxlength="45"> </input>
+        </div>
+        <div class="humansStatIn">
+            <label>Специальность:</label>
+            <input class='pole' data-card="${i}" placeholder="____________________" maxlength="45"> </input>
+        </div>
+        <div class="humansStatIn">
+            <label>Опыт работы:</label>
+            <input class='pole' data-card="${i}" placeholder="____________________" maxlength="45"> </input>
+            <select>
+            <option>лет</option>
+            <option>месяцев</option>
+        </select>
+        </div>
+        <div class="humansStatIn">
+            <label >Компетентность:</label>
+            <select style="margin-right:280px">
+            <option disabled selected>---</option><option>10</option><option>9</option><option>8</option><option>7</option><option>6</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option><option>0</option>
+            </select>
+        </div>
+        <div class="humansStatIn">
+            <label title="Умение работать в команде">Командность:</label>
+            <select>
+            <option disabled selected>---</option><option>10</option><option>9</option><option>8</option><option>7</option><option>6</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option><option>0</option>
+            </select>
+        </div>
+        <div class="humansStatIn">
+            <label title="Профессиональные качества">Проф. качества:</label>
+            <input class='pole' data-card="${i}" placeholder="____________________" maxlength="45"> </input>
+        </div>
+        <button type="button" class="button_CH btn-add-skill" data-card="${i}">Добавить характеристику</button>
         `;
         container.append(Em_div);
     }
-    container.insertAdjacentHTML('beforeend', `<button type="button" class="button_EM" data-card="0">Добавить сотрудника</button>`);
+    container.insertAdjacentHTML('beforeend', `<button class="button_EM" data-card="0">Добавить сотрудника</button>`);
+}
+   if (emp.item) {
+    emp.item.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-add-skill')) {
+            const newRow = `
+            <div class="humansStatIn">
+                <input class="pole" placeholder="Характеристика" maxlength="45">
+                <input class="pole" placeholder="____________________" maxlength="45">
+            </div>`;
+            e.target.insertAdjacentHTML('beforebegin', newRow);
+        }
+    });
 }
 employee_spawn();
 }
