@@ -133,61 +133,83 @@ function employee_spawn(){
     container.innerHTML = '';
     for(var i = 0; i < Em_n;i++){
         const Em_div = document.createElement('div');
-        Em_div.classList.add('humans');
+        Em_div.classList.add('humans', 'closed');
         Em_div.innerHTML =`
-        <input class='pole' data-card="${i}" placeholder="ФИО" maxlength="45" style="width: 100%; text-align: center; box-sizing: border-box; margin-bottom: 10px;"> </input>
-        <select style="width: 100%; text-align: center; box-sizing: border-box; margin-bottom: 10px;">
-            <option disabled selected>Пол</option>
-            <option>Мужской</option>
-            <option>Женский</option>
-        </select>
-        <div class="humansStatIn">
-            <label>Возраст:</label>
-            <input class='pole' data-card="${i}" placeholder="____________________" maxlength="45"> </input>
+        <div class="humans-header" style="width: 100%;">
+            <input class='pole' data-card="${i}" placeholder="ФИО" maxlength="45" style="width: 100%; height: 75px; text-align: center; box-sizing: border-box; margin-bottom: 10px; font-weight: bold;">
         </div>
-        <div class="humansStatIn">
-            <label>Специальность:</label>
-            <input class='pole' data-card="${i}" placeholder="____________________" maxlength="45"> </input>
-        </div>
-        <div class="humansStatIn">
-            <label>Опыт работы:</label>
-            <input class='pole' data-card="${i}" placeholder="____________________" maxlength="45"> </input>
-            <select>
-            <option>лет</option>
-            <option>месяцев</option>
-        </select>
-        </div>
-        <div class="humansStatIn">
-            <label >Компетентность:</label>
-            <select style="margin-right:280px">
-            <option disabled selected>---</option><option>10</option><option>9</option><option>8</option><option>7</option><option>6</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option><option>0</option>
+        
+        <div class="humans-body" style="width: 100%;">
+             <div class="humansStatIn">
+                <select style="width: 100%; text-align: center; box-sizing: border-box; margin-bottom: 4px; font-size: 18px;">
+                <option disabled selected>Пол</option>
+                <option>Мужской</option>
+                <option>Женский</option>
             </select>
+             </div>
+            <div class="humansStatIn">
+                <label>Возраст:</label>
+                <input class='pole' data-card="${i}" placeholder="____________________" maxlength="45">
+            </div>
+            <div class="humansStatIn">
+                <label>Специальность:</label>
+                <input class='pole' data-card="${i}" placeholder="____________________" maxlength="45">
+            </div>
+            <div class="humansStatIn">
+                <label>Опыт работы:</label>
+                <input class='pole' data-card="${i}" placeholder="____________________" maxlength="45">
+            </div>
+            <div class="humansStatIn">
+                <label>Компетентность:</label>
+                <select style="font-size: 18px;">
+                    <option disabled selected>---</option><option>10</option><option>9</option><option>8</option><option>7</option><option>6</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option><option>0</option>
+                </select>
+            </div>
+            <div class="humansStatIn">
+                <label title="Умение работать в команде">Командность:</label>
+                <select style="font-size: 18px;">
+                    <option disabled selected>---</option><option>10</option><option>9</option><option>8</option><option>7</option><option>6</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option><option>0</option>
+                </select>
+            </div>
+            <div class="humansStatIn">
+                <label title="Профессиональные качества">Проф. качества:</label>
+                <input class='pole' data-card="${i}" placeholder="____________________" maxlength="45">
+            </div>
+            <button type="button" class="button_CH btn-add-skill" data-card="${i}">Добавить характеристику</button>
         </div>
-        <div class="humansStatIn">
-            <label title="Умение работать в команде">Командность:</label>
-            <select>
-            <option disabled selected>---</option><option>10</option><option>9</option><option>8</option><option>7</option><option>6</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option><option>0</option>
-            </select>
-        </div>
-        <div class="humansStatIn">
-            <label title="Профессиональные качества">Проф. качества:</label>
-            <input class='pole' data-card="${i}" placeholder="____________________" maxlength="45"> </input>
-        </div>
-        <button type="button" class="button_CH btn-add-skill" data-card="${i}">Добавить характеристику</button>
         `;
         container.append(Em_div);
     }
-    container.insertAdjacentHTML('beforeend', `<button class="button_EM" data-card="0">Добавить сотрудника</button>`);
+    const addBtn = document.createElement('button');
+    addBtn.classList.add('button_EM');
+    addBtn.setAttribute('data-card', '0');
+    addBtn.innerText = 'Добавить сотрудника';
+    container.append(addBtn);
 }
-   if (emp.item) {
+
+if (emp.item) {
     emp.item.addEventListener('click', function(e) {
+        // 1. Логика добавления новой характеристики
         if (e.target.classList.contains('btn-add-skill')) {
             const newRow = `
             <div class="humansStatIn">
-                <input class="pole" placeholder="Характеристика" maxlength="45">
+                <input class="pole" style="width: 175px;" placeholder="Характеристика" maxlength="45">
                 <input class="pole" placeholder="____________________" maxlength="45">
             </div>`;
             e.target.insertAdjacentHTML('beforebegin', newRow);
+            return; // Прерываем код, чтобы не закрыть карточку при нажатии на кнопку
+        }
+
+        // 2. Логика переключения открыть/закрыть карточку
+        const card = e.target.closest('.humans');
+        if (card) {
+            // Если кликнули по инпуту или селекту, открываем карточку, но не закрываем обратно при повторном клике внутрь поля
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
+                card.classList.remove('closed');
+            } else {
+                // Если кликнули по самой карточке или по фону — переключаем состояние
+                card.classList.toggle('closed');
+            }
         }
     });
 }

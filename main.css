@@ -151,9 +151,9 @@ body, button{
     display: grid; 
     grid-template-columns: repeat(3, 1fr); 
     gap: 15px; 
+    align-items: start;
 }
 .humans, .button_EM {
-    width: 100%; 
     height: auto;
     padding: 15px;
     box-sizing: border-box;
@@ -161,29 +161,58 @@ body, button{
     flex-direction: column;
     align-items: flex-start; 
     text-align: left;
-    border: red 1px solid;
+    border: #C1BAB2 1px solid;
+    background: #EAE5E1;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.humans.closed .humans-body {
+    display: none;
 }
 .button_EM {
-    border: green 1px solid;
+    justify-content: center;
+    align-items: center;
+    border: #A39B94 2px dashed;
+    background: transparent;
     cursor: pointer;
+    font-weight: bold;
+    min-height: 115px;
 }
 .button_CH {
     width: 100%; 
     text-align: center; 
     box-sizing: border-box; 
+    margin-top: 15px;
     margin-bottom: 10px;
-    border: black 2px solid;
-    border-radius: 5px;
+    padding: 8px;
+    border: #4A4A4A 1px solid;
+    background-color: transparent;
+    border-radius: 4px;
     cursor: pointer;
+    font-size: 14px;
 }
 .humansStatIn {
     display: flex;
     align-items: center; 
-    margin-bottom: 10px; 
     width: 100%;
+    margin-top: 6px;
 }
 .humansStatIn label {
-    margin-right: 25px;
+    white-space: nowrap; 
+    color: #333;
+    width: 175px; 
+    flex-shrink: 0; 
 }
-
-
+.humansStatIn .pole {
+    width: 300px;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+}
+.humansStatIn .pole:focus {
+    outline: none;
+}
+.humansStatIn label, .humansStatIn .pole, .humansStatIn select {
+    font-size: 18px;          
+    line-height: 1.2;         
+}
