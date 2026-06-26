@@ -103,7 +103,7 @@ if (body) {
             n++; 
             localStorage.setItem('SaveCount', n);
             newcolumns();
-            return; // Выходим из функции, так как перерисовка уже запущена
+            return;
         }
         if (event.target.classList.contains('button_remove')) {
             if (Exactly1()) {
@@ -127,22 +127,24 @@ newcolumns()
 // ------------------Страничка employee.thml------------------
 if (file == 'employee.html') {
     const emp = { item: document.querySelector('.employee') };
+    const searchInput = document.querySelector('.search');
     let employees = JSON.parse(localStorage.getItem('SaveEmployees')) || Array.from({ length: 8 }, () => ({
         fio: '', gender: 'Пол', age: '', specialty: '', experience: '', competence: '---', teamwork: '---', qualities: '', customSkills: []
     }));
-    function getEmployeeHTML(index, data) {
-        let customSkillsHTML = '';
-        if (data.customSkills && data.customSkills.length > 0) {
-            data.customSkills.forEach((skill, j) => {
-                customSkillsHTML += `
-                <div class="humansStatIn">
-                    <input class="pole" data-card="${index}" data-skill-idx="${j}" data-field="skill-name" style="width: 175px; text-align: left;" placeholder="Характеристика" maxlength="45" value="${skill.name || ''}">
-                    <input class="pole" data-card="${index}" data-skill-idx="${j}" data-field="skill-val" placeholder="____________________" maxlength="45" value="${skill.value || ''}">
-                </div>`;
-            });
-        }
+    function getEmployeeHTML(index, data, isOpen = false) {
+    let customSkillsHTML = '';
+    if (data.customSkills && data.customSkills.length > 0) {
+        data.customSkills.forEach((skill, j) => {
+            customSkillsHTML += `
+            <div class="humansStatIn" style="display: flex; align-items: center; position: relative;">
+                <input class="pole" data-card="${index}" data-skill-idx="${j}" data-field="skill-name" style="width: 175px; text-align: left;" placeholder="Характеристика" maxlength="45" value="${skill.name || ''}">
+                <input class="pole" data-card="${index}" data-skill-idx="${j}" data-field="skill-val" placeholder="__________________" maxlength="45" value="${skill.value || ''}">
+                <button type="button" class="btn-delete-skill" data-card="${index}" data-skill-idx="${j}"> x</button>
+            </div>`;
+        });
+    }
         return `
-        <div class="humans closed">
+        <div class="humans ${isOpen ? '' : 'closed'}" data-index="${index}">
             <div class="humans-header" style="width: 100%;">
                 <button type="button" class="humans-close">⌃</button>
                 <button type="button" class="humans-delete" data-card="${index}">X</button>
@@ -150,15 +152,15 @@ if (file == 'employee.html') {
             </div>
             <div class="humans-body" style="width: 100%;">
                 <div class="humans-body-content">
-                     <div class="humansStatIn">
+                    <div class="humansStatIn">
                         <select class='list-for-humans' data-card="${index}" data-field="gender" style="width: 100%; text-align: center; box-sizing: border-box; margin-bottom: 4px; font-size: 18px;">
                             <option disabled ${data.gender === 'Пол' ? 'selected' : ''}>Пол</option>
                             <option ${data.gender === 'Мужской' ? 'selected' : ''}>Мужской</option>
                             <option ${data.gender === 'Женский' ? 'selected' : ''}>Женский</option>
                         </select>
-                     </div>
+                    </div>
                     <div class="humansStatIn">
-                        <label>Возраст:</label>
+                        <label>Дата рождения:</label>
                         <input class='pole' data-card="${index}" data-field="age" placeholder="____________________" maxlength="45" value="${data.age || ''}">
                     </div>
                     <div class="humansStatIn">
@@ -193,26 +195,38 @@ if (file == 'employee.html') {
             </div>
         </div>`;
     }
+
     function ExactlyDeleteEmployee() {
         return confirm("Вы точно хотите удалить сотрудника?");
     }
     function employee_spawn() {
-        const container = emp.item;
-        if (!container) return;
-        container.innerHTML = '';
-        employees.forEach((empData, i) => {
-            container.insertAdjacentHTML('beforeend', getEmployeeHTML(i, empData));
-        });
-        const addBtn = document.createElement('button');
-        addBtn.classList.add('button_EM');
-        addBtn.innerText = 'Добавить сотрудника';
-        container.append(addBtn);
+    const container = emp.item;
+    if (!container) return;
+    const openedCards = Array.from(container.querySelectorAll('.humans:not(.closed)')).map(card => parseInt(card.getAttribute('data-index')));
+    container.innerHTML = '';
+    const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    employees.forEach((empData, i) => {
+        const matchFio = (empData.fio || '').toLowerCase().includes(query);
+        const matchSpecialty = (empData.specialty || '').toLowerCase().includes(query);
+        if (query === '' || matchFio || matchSpecialty) {
+            const isOpen = openedCards.includes(i);
+            container.insertAdjacentHTML('beforeend', getEmployeeHTML(i, empData, isOpen));
+        }
+    });
+    const addBtn = document.createElement('button');
+    addBtn.classList.add('button_EM');
+    addBtn.innerText = 'Добавить сотрудника';
+    container.append(addBtn);
     }
     if (emp.item) {
+        if (searchInput) {
+            searchInput.addEventListener('input', employee_spawn);
+        }
         const autoSaveHandler = function (e) {
             const field = e.target.getAttribute('data-field');
             const cardIdx = e.target.getAttribute('data-card');
             if (!field || cardIdx === null) return;
+
             if (field !== 'skill-name' && field !== 'skill-val') {
                 employees[cardIdx][field] = e.target.value;
             } else {
@@ -229,7 +243,7 @@ if (file == 'employee.html') {
             localStorage.setItem('SaveEmployees', JSON.stringify(employees));
         };
         emp.item.addEventListener('input', autoSaveHandler);
-        emp.item.addEventListener('change', autoSaveHandler);
+        emp.item.addEventListener('change', autoSaveHandler); 
         emp.item.addEventListener('click', function (e) {
             if (e.target.classList.contains('humans-delete')) {
                 if (ExactlyDeleteEmployee()) {
@@ -256,6 +270,16 @@ if (file == 'employee.html') {
                 employees[cardIdx].customSkills.push({ name: '', value: '' });
                 localStorage.setItem('SaveEmployees', JSON.stringify(employees));
                 employee_spawn();
+                return;
+            }
+            if (e.target.classList.contains('btn-delete-skill')) {
+                const cardIdx = e.target.getAttribute('data-card');
+                const skillIdx = parseInt(e.target.getAttribute('data-skill-idx'));
+                if (employees[cardIdx] && employees[cardIdx].customSkills) {
+                    employees[cardIdx].customSkills.splice(skillIdx, 1);
+                    localStorage.setItem('SaveEmployees', JSON.stringify(employees));
+                    employee_spawn();
+                }
                 return;
             }
             const card = e.target.closest('.humans');

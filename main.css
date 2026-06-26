@@ -154,6 +154,26 @@ body, button{
     color: #902923;
 }
 /* ------------------Страничка employe------------------*/
+.searchIMG{
+    height: auto;
+    width: 20px;
+}
+.search{
+    height: 70px;
+    width: 350px;
+    background: transparent;
+    border: none;
+    outline: none;
+    text-align: left;
+    font-size: 24px;
+    cursor: pointer;
+    margin-right: -25px;
+    margin-top: 15px;
+}
+.search:disabled{
+    color: black;
+    cursor: default;
+}
 .employee {
     margin: 0;
     width: 100%;
@@ -185,7 +205,14 @@ body, button{
     padding-bottom: 18px;
     transition: 0.2s ease;
 }
-.humans-close:hover, .humans-delete:hover {
+.btn-delete-skill{
+    color: #333333;
+    border: none;
+    transition: 0.2s ease;
+    margin-right: 2px;
+    margin-left: 5px;
+}
+.humans-close:hover, .humans-delete:hover,.btn-delete-skill:hover {
   color: #A22C29;
 }
 .humans.closed .humans-close, .humans.closed .humans-delete {
